@@ -1,0 +1,12 @@
+{
+ "bootstrap": {
+   "chef": {
+     "url_type": "http",
+     "init_style": "init",
+     "path": "/srv/chef",
+     "serve_path": "/srv/chef",
+     "server_fqdn": "chef.pixelballistics.com"
+   }
+ },
+ "run_list": [ "role[developer_ijonas]" ]
+}
