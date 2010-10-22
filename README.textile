@@ -1,0 +1,6 @@
+h1. My Chef Scripts
+
+These are a bunch of Chef scripts I've knocked up, whilst familiarizing myself with Opscode' Chef.
+Feel free to use and butcher, but I make NO WARRANTEES. Use at your own peril.
+
+(c) Ijonas Kisselbach 2010

@@ -1,0 +1,7 @@
+#!/bin/sh
+ssh $1 "apt-get install ruby ruby-dev libopenssl-ruby rdoc ri irb build-essential wget ssl-cert"
+ssh $1 "cd /tmp;wget http://production.cf.rubygems.org/rubygems/rubygems-1.3.7.tgz;tar zxf rubygems-1.3.7.tgz;cd rubygems-1.3.7;ruby setup.rb --no-format-executable;gem install chef --no-rdoc --no-ri"
+ssh $1 "mkdir -p /etc/chef"
+scp solo.rb root@$1:/etc/chef/solo.rb
+scp api_webui.json root@$1:api_webui.json
+echo "REMEMBER to update api_webui.json server_url details"
