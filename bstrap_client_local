@@ -1,32 +1,33 @@
 #!/bin/bash
 
-CHEF_ROLE=$1
-sudo add-apt-repository ppa:alestic/ppa
-sudo apt-get update
-sudo apt-get upgrade
-sudo apt-get install ruby ruby-dev libopenssl-ruby rdoc ri irb build-essential wget ssl-cert openssh-server runurl
+CHEF_SERVER=$1
+CHEF_ROLE=$2
+
+# let's get Ubuntu up to date and install the Chef gem
+apt-get update
+apt-get upgrade
+apt-get install ruby ruby-dev libopenssl-ruby rdoc ri irb build-essential wget ssl-cert openssh-server
 cd /tmp
 wget http://production.cf.rubygems.org/rubygems/rubygems-1.3.7.tgz
 tar zxf rubygems-1.3.7.tgz
 cd rubygems-1.3.7
-sudo ruby setup.rb
-sudo ln -sfv /usr/bin/gem1.8 /usr/bin/gem
-
-# install chef via gem
-sudo gem install chef --no-rdoc --no-ri
+ruby setup.rb
+ln -sfv /usr/bin/gem1.8 /usr/bin/gem
+gem install chef --no-rdoc --no-ri
 
 # download chef scripts and configuration files
 # note that CHEF_ROLE dictates with JSON file to use (associates client with that role)
-# sudo mkdir -p /etc/chef
-# sudo wget -qO/etc/chef/client.rb http://github.com/ijonas/my-chef-scripts/raw/master/client.rb
-# sudo wget -qO/etc/chef/chef.json http://github.com/ijonas/my-chef-scripts/raw/master/chef.${CHEF_ROLE}.json
-# sudo wget -qO/etc/init.d/chef-client http://gist.github.com/raw/484780/ac3753ed0f75631e56b638c5ee343967a555edf2/gistfile1.txt
+mkdir -p /etc/chef
+wget -qO/etc/chef/client.rb http://github.com/ijonas/my-chef-scripts/raw/master/client.rb
+# wget -qO/etc/chef/chef.json http://github.com/ijonas/my-chef-scripts/raw/master/chef.${CHEF_ROLE}.json
+wget -qO/etc/init.d/chef-client http://gist.github.com/raw/484780/ac3753ed0f75631e56b638c5ee343967a555edf2/gistfile1.txt
+scp root@${CHEF_SERVER}:/etc/chef/validation.pem /etc/chef/validation.pem
 
 # initial run of chef -- role association happens
-# chef-client -j /etc/chef/chef.json -L /var/log/chef.log -l debug
+chef-client -L /var/log/chef.log -l debug
 
 # remove validation key
-# rm -rf /etc/chef/validation.pem
+rm -rf /etc/chef/validation.pem
 
 # run init script and chkconfig it on
 # chmod +x /etc/init.d/chef-client
